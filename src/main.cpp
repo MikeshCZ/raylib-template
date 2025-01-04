@@ -1,34 +1,16 @@
 ﻿#include "intro.hpp"
-#include <algorithm>
 #include <raylib.h>
 #include <string>
 
 #define RAYGUI_IMPLEMENTATION
 #include <raygui.h>
 
-// Detection of OS
-#if defined(_WIN32) || defined(_WIN64)
-#define OS_NAME "Windows"
-#elif defined(__APPLE__) || defined(__MACH__)
-#define OS_NAME "MacOS"
-#elif defined(__linux__)
-#define OS_NAME "Linux"
-#elif defined(__unix__)
-#define OS_NAME "Unix"
-#elif defined(__ANDROID__)
-#define OS_NAME "Android"
-#elif defined(__FreeBSD__)
-#define OS_NAME "FreeBSD"
-#else
-#define OS_NAME "NA"
-#endif
-
 using namespace std;
 
 int
 main ()
 {
-  // === INICIALIZACE ===
+  // === INITIALIZATION ===
 
   // --- Raylib Flags ---
 
@@ -36,43 +18,33 @@ main ()
   SetConfigFlags (FLAG_MSAA_4X_HINT);
   SetConfigFlags (FLAG_WINDOW_HIGHDPI);
 
-  // on macOS, we need to find out the resolution in full-screen mode in some
-  // cases
-  // if (std::string (OS_NAME) == "MacOS")
-  //  SetConfigFlags (FLAG_FULLSCREEN_MODE);
+  // --- Constants & Variables ---
 
-  // --- Konstanty & Proměnné ---
+  bool playIntro = true;                         // play raylib intro
+  bool playMusic = true;                         // play background music
+  bool IsStatsVisible = true;                    // show movement stats
+  const Color COL_BACK = { 205, 245, 245, 255 }; // background color
+  bool showMessageBox = false;                   // message box visible
 
-  constexpr bool DEBUG = false; // DEBUG mód
-  bool playIntro = !DEBUG;      // přehraj raylib intro
-  bool playMusic = !DEBUG;      // hraj muziku na pozadí
-  bool IsStatsVisible = DEBUG;  // zobrazit statistiky pohybu
-  int windowRatio = 1;          // koeficient velikosti okna
-  if (DEBUG)
-    windowRatio = 2;              // v případě debugu poloviční okno
-  InitWindow (1280, 720, "Init"); // otevřené okno pro získání info o rozlišení
-  const int CURRENT_MONITOR = GetCurrentMonitor (); // index aktuální obrazovky
-  const int SCREEN_WIDTH
-      = GetMonitorWidth (CURRENT_MONITOR) / windowRatio; // šířka obrazovky
-  const int SCREEN_HEIGHT
-      = GetMonitorHeight (CURRENT_MONITOR) / windowRatio; // výška obrazovky
-  int fps = GetMonitorRefreshRate (CURRENT_MONITOR);      // refresh rate FPS
-  CloseWindow ();                                         // zavření init okna
-  const string GAME_NAME = "Mikesh's Raylib template";    // název hry
-  const char *WINDOW_TITLE = GAME_NAME.c_str ();          // nadpis okna
-  const Color COL_BACK = { 205, 245, 245, 255 };          // barva pozadí
-  bool showMessageBox = false; // message box visible
-  // --- Příprava před spuštěním ---
+  const string GAME_NAME = "Mikesh's Raylib template"; // game name
+  const char *WINDOW_TITLE = GAME_NAME.c_str ();       // window title
 
-  // Hlavní okno
-  InitWindow (SCREEN_WIDTH, SCREEN_HEIGHT, WINDOW_TITLE);
-  if (DEBUG xor !IsWindowFullscreen ())
+  InitWindow (0, 0, WINDOW_TITLE); // Inicialization of main window
+
+  const int CURRENT_MONITOR = GetCurrentMonitor (); // index of current monitor
+  const int SCREEN_WIDTH = GetMonitorWidth (CURRENT_MONITOR);   // scr width
+  const int SCREEN_HEIGHT = GetMonitorHeight (CURRENT_MONITOR); // scr height
+  int fps = GetMonitorRefreshRate (CURRENT_MONITOR); // refresh rate FPS
+
+  // --- Preparation before startup ---
+
+  // Main window
+  if (!IsWindowFullscreen ())
     ToggleFullscreen ();
   SetTargetFPS (fps);
-  // HideCursor ();
   SetExitKey (KEY_F10);
 
-  // Inicializace hudby na pozadí
+  // Background music initialization
   InitAudioDevice ();
   Music music = LoadMusicStream ("assets/music.ogg");
   SetMusicVolume (music, 1.0f);
@@ -81,11 +53,10 @@ main ()
 
   // === INTRO ===
 
-  Intro intro (WINDOW_TITLE); // Raylib Intro
-
   if (playIntro)
     {
-      SetTargetFPS (60); // Nastavení FPS na 60, aby byla synchronizovaná hudba
+      Intro intro (WINDOW_TITLE); // Raylib Intro class
+      SetTargetFPS (60);          // Set FPS to 60 to synchronize the music
 
       while (WindowShouldClose () == false && playIntro)
         {
@@ -102,47 +73,48 @@ main ()
               intro.DrawLogoScreen ();
               EndDrawing ();
             }
-          else // Konec intra
+          else // End of intro
             {
-              SetTargetFPS (fps); // nastavení FPS zpět
+              SetTargetFPS (fps); // reset FPS
               break;
             }
         }
     }
 
-  // === HLAVNÍ SMYČKA ===
+  // === MAIN LOOP ===
 
   while (WindowShouldClose () == false)
     {
-      // --- Hudba ---
+      // --- Music ---
 
       if (playMusic)
         {
           UpdateMusicStream (music);
         }
 
-      // --- 1. Zpracování událostí ---
+      // --- 1. Event handling ---
 
-      // Funkční klávesy
-      if (IsKeyPressed (KEY_F5)) // přepnout fullscreen
+      // Function keys
+      if (IsKeyPressed (KEY_F5)) // toggle fullscreen
         {
           ToggleFullscreen ();
         }
 
-      if (IsKeyPressed (KEY_F8)) // zobrazit statistiky
+      if (IsKeyPressed (KEY_F8)) // show stats
         {
           IsStatsVisible = !IsStatsVisible;
         }
 
-      // --- 2. Aktualizace stavu ---
+      // --- 2. Update state ---
 
-      // Update rutiny
+      // Update routines
 
-      // --- 3. Vykreslení ---
+      // --- 3. Drawing ---
 
-      BeginDrawing ();        // začátek vykreslení
-      ClearBackground (GRAY); // vykreslení pozadí
+      BeginDrawing ();        // start drawing
+      ClearBackground (GRAY); // draw background
 
+      // Raygui example
       if (GuiButton ((Rectangle){ 24, 24, 120, 30 }, "#191# Raygui Test"))
         showMessageBox = true;
 
@@ -150,7 +122,7 @@ main ()
         {
           int result = GuiMessageBox (
               (Rectangle){ 85, 70, 250, 200 }, "#191# Message Box",
-              "It works!!!\n\nTry:\n F5 to toogle fullscreen\nF8 to show "
+              "It works!!!\n\nTry:\n F5 to toggle fullscreen\nF8 to show "
               "stats\nF10 to quit",
               "Nice;Cool");
 
@@ -160,19 +132,18 @@ main ()
 
       if (IsStatsVisible)
         {
-          DrawFPS (SCREEN_WIDTH - 90, 5); // vypíše aktuální FPS
+          DrawFPS (SCREEN_WIDTH - 90, 5); // display current FPS
 
-          // Vypsání statistik
+          // Display stats
           DrawText (TextFormat ("Target FPS: %i", fps), 10, 10, 10, WHITE);
         }
 
-      EndDrawing (); // konec vykreslení
+      EndDrawing (); // end drawing
     }
 
-  // === UKONČOVACÍ PROCEDŮRA ===
+  // === END PROCEDURE ===
 
   UnloadMusicStream (music);
   CloseAudioDevice ();
-  // ShowCursor ();
   CloseWindow ();
 }
