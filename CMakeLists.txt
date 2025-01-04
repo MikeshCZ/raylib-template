@@ -30,11 +30,6 @@ if (NOT raylib_FOUND)
     message(STATUS "Raylib download complete.")
 endif()
 
-# Enable Metal support on macOS for raylib
-if(APPLE)
-    set(USE_METAL ON CACHE BOOL "" FORCE)
-endif()
-
 # Raygui
 find_package(raygui)
 if (NOT raygui_FOUND)
