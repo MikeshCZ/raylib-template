@@ -40,11 +40,11 @@ main ()
 
   // --- Konstanty & Proměnné ---
 
-  constexpr bool DEBUG = true; // DEBUG mód
-  bool playIntro = !DEBUG;     // přehraj raylib intro
-  bool playMusic = !DEBUG;     // hraj muziku na pozadí
-  bool IsStatsVisible = DEBUG; // zobrazit statistiky pohybu
-  int windowRatio = 1;         // koeficient velikosti okna
+  constexpr bool DEBUG = false; // DEBUG mód
+  bool playIntro = !DEBUG;      // přehraj raylib intro
+  bool playMusic = !DEBUG;      // hraj muziku na pozadí
+  bool IsStatsVisible = DEBUG;  // zobrazit statistiky pohybu
+  int windowRatio = 1;          // koeficient velikosti okna
   if (DEBUG)
     windowRatio = 2;              // v případě debugu poloviční okno
   InitWindow (1280, 720, "Init"); // otevřené okno pro získání info o rozlišení
