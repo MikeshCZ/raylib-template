@@ -74,4 +74,4 @@ Once the environment is set up:
 
 ## 
 
-## If you like this repository you can support me and **[buy me a coffee](https://www.buymeacoffee.com/mikeshczn)**. Thank You!
+## If you like this repository you can **[buy me a coffee](https://www.buymeacoffee.com/mikeshczn)**. Thank You!
