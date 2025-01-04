@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Raylib
 find_package(raylib)
 if (NOT raylib_FOUND)
-    message(STATUS "Raylib not found, downloading...")
+    message(STATUS "Raylib not found.")
     
     set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
@@ -25,8 +25,9 @@ if (NOT raylib_FOUND)
         GIT_TAG "master"
         GIT_PROGRESS TRUE
     )
-
+    message(STATUS "Starting raylib download. Please wait ...")
     FetchContent_MakeAvailable(raylib)
+    message(STATUS "Raylib download complete.")
 endif()
 
 # Enable Metal support on macOS for raylib
@@ -37,7 +38,7 @@ endif()
 # Raygui
 find_package(raygui)
 if (NOT raygui_FOUND)
-    message(STATUS "Raygui not found, downloading...")
+    message(STATUS "Raygui not found.")
 
     set(RAYGUI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) 
 
@@ -48,8 +49,9 @@ if (NOT raygui_FOUND)
         GIT_TAG "master"
         GIT_PROGRESS TRUE
     )
-
+    message(STATUS "Starting raygui download. Please wait ...")
     FetchContent_MakeAvailable(raygui)
+    message(STATUS "Raygui download complete.")
 endif ()
 
 # Adding our source files
