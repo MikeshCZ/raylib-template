@@ -1,6 +1,6 @@
 # Raylib Template
 
-Starting template for Raylib with C++ and cMake. Including configuration files for Visual Studio Code. Optimize for MacOS and Windows.
+Starting template for `Raylib` with `C++` and `CMake` for `Visual Studio Code`. Including configuration files for Visual Studio Code. Optimize for MacOS and Windows.
 
 ## For MacOS:
 
