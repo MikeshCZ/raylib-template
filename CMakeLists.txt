@@ -55,7 +55,7 @@ if (NOT raygui_FOUND)
 endif ()
 
 # Adding our source files
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.hpp")
+file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.hpp" "${CMAKE_CURRENT_LIST_DIR}/src/*.c" "${CMAKE_SOURCE_DIR}/src/*.h")
 set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/src/")
 
 # Přidání složky assets do výstupu
@@ -71,6 +71,6 @@ target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
-target_include_directories(${PROJECT_NAME} PRIVATE ${raygui_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${raygui_SOURCE_DIR}/src)
 
 add_dependencies(${PROJECT_NAME} CopyAssets)
