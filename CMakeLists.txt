@@ -4,12 +4,6 @@ cmake_minimum_required(VERSION 3.14)
 get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 project(${PROJECT_NAME})
 
-# C and C++ standard
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Fetch libs
-
 # Raylib
 find_package(raylib)
 if (NOT raylib_FOUND)
@@ -53,7 +47,7 @@ endif ()
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.hpp" "${CMAKE_CURRENT_LIST_DIR}/src/*.c" "${CMAKE_SOURCE_DIR}/src/*.h")
 set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/src/")
 
-# Přidání složky assets do výstupu
+# Adding an assets folder to the output
 add_custom_target(CopyAssets ALL
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/assets
@@ -62,6 +56,11 @@ add_custom_target(CopyAssets ALL
 
 # Declaring our executable
 add_executable(${PROJECT_NAME})
+
+# C++ standard
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
+
+# Sources, libs, assets
 target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
 
