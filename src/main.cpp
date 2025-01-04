@@ -3,6 +3,9 @@
 #include <raylib.h>
 #include <string>
 
+#define RAYGUI_IMPLEMENTATION
+#include <raygui.h>
+
 // Detection of OS
 #if defined(_WIN32) || defined(_WIN64)
 #define OS_NAME "Windows"
@@ -58,7 +61,7 @@ main ()
   const string GAME_NAME = "Mikesh's Raylib template";    // název hry
   const char *WINDOW_TITLE = GAME_NAME.c_str ();          // nadpis okna
   const Color COL_BACK = { 205, 245, 245, 255 };          // barva pozadí
-
+  bool showMessageBox = false; // message box visible
   // --- Příprava před spuštěním ---
 
   // Hlavní okno
@@ -66,7 +69,7 @@ main ()
   if (DEBUG xor !IsWindowFullscreen ())
     ToggleFullscreen ();
   SetTargetFPS (fps);
-  HideCursor ();
+  // HideCursor ();
   SetExitKey (KEY_F10);
 
   // Inicializace hudby na pozadí
@@ -140,6 +143,21 @@ main ()
       BeginDrawing ();        // začátek vykreslení
       ClearBackground (GRAY); // vykreslení pozadí
 
+      if (GuiButton ((Rectangle){ 24, 24, 120, 30 }, "#191# Raygui Test"))
+        showMessageBox = true;
+
+      if (showMessageBox)
+        {
+          int result = GuiMessageBox (
+              (Rectangle){ 85, 70, 250, 200 }, "#191# Message Box",
+              "It works!!!\n\nTry:\n F5 to toogle fullscreen\nF8 to show "
+              "stats\nF10 to quit",
+              "Nice;Cool");
+
+          if (result >= 0)
+            showMessageBox = false;
+        }
+
       if (IsStatsVisible)
         {
           DrawFPS (SCREEN_WIDTH - 90, 5); // vypíše aktuální FPS
@@ -155,6 +173,6 @@ main ()
 
   UnloadMusicStream (music);
   CloseAudioDevice ();
-  ShowCursor ();
+  // ShowCursor ();
   CloseWindow ();
 }
