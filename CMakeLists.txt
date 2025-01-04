@@ -5,13 +5,9 @@ get_filename_component(PROJECT_NAME ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 project(${PROJECT_NAME})
 
 # Raylib
-find_package(raylib)
+find_package(raylib QUIET)
 if (NOT raylib_FOUND)
     message(STATUS "Raylib not found.")
-    
-    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
-
     include(FetchContent)
     FetchContent_Declare(
         raylib
@@ -19,18 +15,21 @@ if (NOT raylib_FOUND)
         GIT_TAG "master"
         GIT_PROGRESS TRUE
     )
-    message(STATUS "Starting raylib download. Please wait ...")
-    FetchContent_MakeAvailable(raylib)
-    message(STATUS "Raylib download complete.")
+    FetchContent_GetProperties(raylib)
+    if (NOT raylib_POPULATED) # Have we downloaded raylib yet?
+        set(FETCHCONTENT_QUIET NO)
+        message(STATUS "Starting raylib download. Please wait ...")
+        FetchContent_MakeAvailable(raylib)
+        message(STATUS "Raylib download complete.")
+        set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+        set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
+    endif()
 endif()
 
 # Raygui
-find_package(raygui)
+find_package(raygui QUIET)
 if (NOT raygui_FOUND)
     message(STATUS "Raygui not found.")
-
-    set(RAYGUI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) 
-
     include(FetchContent)
     FetchContent_Declare(
         raygui
@@ -38,9 +37,14 @@ if (NOT raygui_FOUND)
         GIT_TAG "master"
         GIT_PROGRESS TRUE
     )
-    message(STATUS "Starting raygui download. Please wait ...")
-    FetchContent_MakeAvailable(raygui)
-    message(STATUS "Raygui download complete.")
+    FetchContent_GetProperties(raygui)
+    if (NOT raygui_POPULATED) # Have we downloaded raylib yet?
+        set(FETCHCONTENT_QUIET NO)
+        message(STATUS "Starting raygui download. Please wait ...")
+        FetchContent_MakeAvailable(raygui)
+        message(STATUS "Raygui download complete.")
+        set(RAYGUI_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    endif()
 endif ()
 
 # Adding our source files
